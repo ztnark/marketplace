@@ -53,7 +53,7 @@
     "reselect": "^3.0.1",
     "rollbar": "^2.3.9",
     "semantic-ui-css": "^2.2.14",
-    "semantic-ui-react": "^0.78.2",
+    "semantic-ui-react": "0.78.1",
     "tinycolor2": "^1.4.1",
     "webpack": "^3.10.0",
     "webpack-dotenv-plugin": "^2.0.2"
