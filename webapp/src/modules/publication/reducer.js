@@ -83,7 +83,7 @@ export function publicationReducer(state = INITIAL_STATE, action) {
     }
     case FETCH_PARCELS_SUCCESS:
     case FETCH_ADDRESS_PARCELS_SUCCESS: {
-      const publications = getParcelPublications(action.parcels)
+      const publications = action.publications || getParcelPublications(action.parcels)
 
       if (publications.length > 0) {
         return {

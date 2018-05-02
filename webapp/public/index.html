@@ -45,6 +45,10 @@
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
 
+  <script>
+    window.worker = new window.Worker('%PUBLIC_URL%/worker.js')
+  </script>
+
   <!-- Segment thingy -->
   <script>
     !function () {

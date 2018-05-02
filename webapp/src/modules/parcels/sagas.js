@@ -1,3 +1,4 @@
+import { store } from 'store'
 import { takeEvery, select, call, put } from 'redux-saga/effects'
 import { push } from 'react-router-redux'
 import { eth, contracts } from 'decentraland-eth'
@@ -17,6 +18,20 @@ import { locations } from 'locations'
 import { api } from 'lib/api'
 import { buildCoordinate } from 'lib/utils'
 import { inBounds } from 'lib/parcelUtils'
+import { toParcelObject, getParcelPublications } from './utils'
+
+window.worker.addEventListener(
+  'message',
+  function(e) {
+    const parcels = e.data
+    const allParcels = getParcels(store.getState())
+    const parcelObject = toParcelObject(parcels, allParcels)
+    const publications = getParcelPublications(parcels)
+
+    store.dispatch(fetchParcelsSuccess(parcels, parcelObject, publications))
+  },
+  false
+)
 
 export function* parcelsSaga() {
   yield takeEvery(FETCH_PARCELS_REQUEST, handleParcelsRequest)
@@ -29,9 +44,9 @@ function* handleParcelsRequest(action) {
     const nw = buildCoordinate(action.nw.x, action.nw.y)
     const se = buildCoordinate(action.se.x, action.se.y)
     const { parcels } = yield call(() => api.fetchParcelsInRange(nw, se))
-
-    yield put(fetchParcelsSuccess(parcels))
+    window.worker.postMessage(parcels)
   } catch (error) {
+    console.warn(error)
     yield put(fetchParcelsFailure(error.message))
   }
 }

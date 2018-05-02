@@ -62,7 +62,7 @@ export function parcelsReducer(state = INITIAL_STATE, action) {
         error: null,
         data: {
           ...state.data,
-          ...toParcelObject(action.parcels, state.data)
+          ...(action.parcelObject || toParcelObject(action.parcels, state.data))
         }
       }
     }
