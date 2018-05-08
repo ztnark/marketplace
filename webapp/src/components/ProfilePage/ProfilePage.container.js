@@ -6,7 +6,8 @@ import { getWallet, isConnecting } from 'modules/wallet/selectors'
 import { getAddresses } from 'modules/address/selectors'
 import { fetchAddress } from 'modules/address/actions'
 import { navigateTo } from 'modules/location/actions'
-import { getPageFromRouter, paginate } from './utils'
+import { Location } from 'lib/Location'
+import { Pagination } from 'lib/Pagination'
 
 import ProfilePage from './ProfilePage'
 
@@ -16,15 +17,15 @@ const mapState = (state, { location, match }) => {
   const wallet = getWallet(state)
   const addresses = getAddresses(state)
   const isLoading = getLoading(state).some(action => action.address === address)
-  const page = getPageFromRouter(location)
+  const page = new Location(location).getPageFromRouter()
 
   let parcels = []
   let contributions = []
-  let publications = []
+  let publishedParcels = []
   if (address in addresses) {
     parcels = addresses[address].parcels
     contributions = addresses[address].contributions
-    publications = addresses[address].publications
+    publishedParcels = addresses[address].publishedParcels
   }
 
   if (!Object.values(PROFILE_PAGE_TABS).includes(tab)) {
@@ -34,16 +35,16 @@ const mapState = (state, { location, match }) => {
   let pagination
   switch (tab) {
     case PROFILE_PAGE_TABS.publications: {
-      pagination = paginate(publications, page)
+      pagination = Pagination.paginate(publishedParcels, page)
       break
     }
     case PROFILE_PAGE_TABS.contributions: {
-      pagination = paginate(contributions, page)
+      pagination = Pagination.paginate(contributions, page)
       break
     }
     case PROFILE_PAGE_TABS.parcels:
     default: {
-      pagination = paginate(parcels, page)
+      pagination = Pagination.paginate(parcels, page)
     }
   }
   const [grid, isEmpty, pages] = pagination
@@ -52,7 +53,7 @@ const mapState = (state, { location, match }) => {
     address,
     parcels,
     contributions,
-    publications,
+    publishedParcels,
     grid,
     tab,
     page,

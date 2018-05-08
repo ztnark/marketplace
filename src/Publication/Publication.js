@@ -1,5 +1,6 @@
 import { Model } from 'decentraland-commons'
 import { BlockchainEvent } from '../BlockchainEvent'
+import { Parcel } from '../Parcel'
 
 export class Publication extends Model {
   static tableName = 'publications'
@@ -14,6 +15,8 @@ export class Publication extends Model {
     'buyer',
     'price',
     'expires_at',
+    'block_time_created_at',
+    'block_time_updated_at',
     'contract_id'
   ]
   static primaryKey = 'tx_hash'
@@ -36,19 +39,34 @@ export class Publication extends Model {
     return this.find({ x, y }, { created_at: 'DESC' })
   }
 
-  static findByStatus(status) {
-    return this.db.query(this.findByStatusSql(status))
-  }
-
-  static findOpenSql(status) {
+  static findInCoordinateWithStatus(x, y, status) {
     if (!this.isValidStatus(status)) {
-      throw new Error(`Trying to filter by invalid status '${status}'`)
+      throw new Error(`Invalid status '${status}'`)
     }
 
-    return `
-      SELECT * FROM ${this.tableName}
-        WHERE status = '${status}'
-        ORDER BY created_at DESC`
+    return this.find({ x, y, status }, { created_at: 'DESC' })
+  }
+
+  static findPublicationsByStatusSql(status = null) {
+    if (!this.isValidStatus(status)) {
+      throw new Error(`Invalid status '${status}'`)
+    }
+
+    return `SELECT *
+      FROM ${this.tableName}
+      WHERE status = '${status}'
+        AND expires_at >= EXTRACT(epoch from now()) * 1000
+      ORDER BY created_at DESC`
+  }
+
+  static findLastParcelPublicationJsonSql() {
+    return `SELECT row_to_json(pub.*)
+      FROM ${this.tableName} as pub
+      WHERE pub.x = ${Parcel.tableName}.x
+        AND pub.y = ${Parcel.tableName}.y
+        AND pub.expires_at >= EXTRACT(epoch from now()) * 1000
+      ORDER BY pub.created_at DESC
+      LIMIT 1`
   }
 
   static async cancelOlder(x, y, block_number) {
@@ -85,6 +103,7 @@ export class Publication extends Model {
     if (!this.isValidStatus(newStatus)) {
       throw new Error(`Trying to filter by invalid status '${newStatus}'`)
     }
+
     // 1 -> newStatus, 2 -> IN
     const inPlaceholders = txHashes.map((_, index) => `$${index + 2}`)
 

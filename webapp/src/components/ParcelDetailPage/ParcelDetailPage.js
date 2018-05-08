@@ -61,7 +61,7 @@ export default class ParcelDetailPage extends React.PureComponent {
               <ParcelPreview
                 x={parcel.x}
                 y={parcel.y}
-                selected={[parcel, { x: parcel.x + 1, y: parcel.y + 1 }]}
+                selected={parcel}
                 size={14}
                 padding={2}
               />

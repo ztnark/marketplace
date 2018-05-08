@@ -9,6 +9,8 @@
   "global": {
     "atlas": "Atlas",
     "marketplace": "Mercado",
+    "dashboard": "Dashboard",
+    "profile": "Mi LAND",
     "activity": "Actividad",
     "parcels": "Parcelas",
     "contributions": "Contribuciones",
@@ -36,9 +38,6 @@
   "address": {
     "its_you": "Eres tú!"
   },
-  "navbar": {
-    "my_land": "Mi LAND"
-  },
   "atlas": {
     "owner": "Dueño: {owner}",
     "no_owner": "Sin Dueño",
@@ -55,11 +54,22 @@
       "close_to_expire": "Por terminar"
     }
   },
+  "dashboard": {
+    "stats_title": "Estadísticas",
+    "transactions_title": "Últimas transacciones",
+    "land_owners": "Dueños de LAND",
+    "active_users": "Usuarios activos",
+    "land_traded": "LAND intercambiada",
+    "land_on_sale": "LAND a la venta",
+    "transaction_description":
+      "Parcela {parcel_link} vendida por {seller_link} a {buyer_link} por {price}"
+  },
   "profile_page": {
     "empty": "El usuario no tiene {content}",
     "on_sale": "En Venta"
   },
   "publication": {
+    "acquired_at": "Adquirida en {date}",
     "expired_at": "Expiró {time}",
     "expires_in": "Expira {time}",
     "expires_in_more_than_years": "Expira en más de {years} años",
@@ -95,13 +105,7 @@
       "no_owner": "Sin Dueño"
     },
     "tags": {
-      "title": "Contexto",
-      "road": "Camino",
-      "plaza": "Plaza",
-      "district": "Distrito",
-      "adjacent": "Adyacente",
-      "proximity":
-        "{distance} {distance, plural, one {parcela} other {parcelas}} de distancia"
+      "title": "Contexto"
     },
     "history": {
       "title": "Historial de Transacciones",
@@ -113,6 +117,14 @@
       "sold": "Venta",
       "auction": "Subasta"
     }
+  },
+  "parcel_tags": {
+    "road": "Camino",
+    "plaza": "Plaza",
+    "district": "Distrito",
+    "adjacent": "Adyacente",
+    "proximity":
+      "{distance} {distance, plural, one {parcela} other {parcelas}} de distancia"
   },
   "parcel_edit": {
     "edit_land": "Editar LAND",

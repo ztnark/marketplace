@@ -3,18 +3,25 @@ import PropTypes from 'prop-types'
 import { parcelType, coordsType } from 'components/types'
 import debounce from 'lodash.debounce'
 import { buildCoordinate } from 'lib/utils'
-import { COLORS, getParcelAttributes, inBounds } from 'lib/parcelUtils'
+import {
+  COLORS,
+  getParcelAttributes,
+  inBounds,
+  getBounds
+} from 'lib/parcelUtils'
 import { Parcel, Selection } from 'lib/render'
 import { panzoom } from './utils'
 
-const PADDING = 4
+const LOAD_PADDING = 4
+const VIEW_PADDING = 20
+
+const { minX, minY, maxX, maxY } = getBounds()
 
 export default class ParcelPreview extends React.PureComponent {
   static propTypes = {
     x: PropTypes.number.isRequired,
     y: PropTypes.number.isRequired,
     size: PropTypes.number,
-    padding: PropTypes.number,
     width: PropTypes.number,
     height: PropTypes.number,
     parcels: PropTypes.objectOf(parcelType),
@@ -29,7 +36,6 @@ export default class ParcelPreview extends React.PureComponent {
     x: 0,
     y: 0,
     size: 20,
-    padding: 2,
     width: 100,
     height: 100,
     zoom: 1,
@@ -63,8 +69,8 @@ export default class ParcelPreview extends React.PureComponent {
 
   getDimensions({ width, height }, { pan, zoom, center, size }) {
     const dimensions = {
-      width: Math.ceil(width / size + PADDING),
-      height: Math.ceil(height / size + PADDING)
+      width: Math.ceil(width / size + LOAD_PADDING),
+      height: Math.ceil(height / size + LOAD_PADDING)
     }
     dimensions.nw = {
       x: center.x - Math.ceil(dimensions.width / 2) + Math.ceil(pan.x / size),
@@ -74,6 +80,7 @@ export default class ParcelPreview extends React.PureComponent {
       x: center.x + Math.ceil(dimensions.width / 2) + Math.ceil(pan.x / size),
       y: center.y + Math.ceil(dimensions.height / 2) - Math.ceil(pan.y / size)
     }
+
     return { ...dimensions, pan, zoom, center, size }
   }
 
@@ -175,6 +182,44 @@ export default class ParcelPreview extends React.PureComponent {
     const newZoom = Math.max(minZoom, Math.min(maxZoom, zoom - dz * 0.01))
     const newSize = newZoom * size
 
+    const halfWidth = (this.state.width - LOAD_PADDING) / 2
+    const halfHeight = (this.state.height - LOAD_PADDING) / 2
+
+    const boundaries = {
+      nw: {
+        x: minX - halfWidth,
+        y: maxY + halfHeight
+      },
+      se: {
+        x: maxX + halfWidth,
+        y: minY - halfHeight
+      }
+    }
+
+    const viewport = {
+      nw: {
+        x: this.state.center.x - halfWidth,
+        y: this.state.center.y + halfHeight
+      },
+      se: {
+        x: this.state.center.x + halfWidth,
+        y: this.state.center.y - halfHeight
+      }
+    }
+
+    if (viewport.nw.x + newPan.x / newSize < boundaries.nw.x) {
+      newPan.x = (boundaries.nw.x - viewport.nw.x) * newSize
+    }
+    if (viewport.nw.y - newPan.y / newSize > boundaries.nw.y) {
+      newPan.y = (viewport.nw.y - boundaries.nw.y) * newSize
+    }
+    if (viewport.se.x + newPan.x / newSize > boundaries.se.x) {
+      newPan.x = (boundaries.se.x - viewport.se.x) * newSize
+    }
+    if (viewport.se.y - newPan.y / newSize < boundaries.se.y) {
+      newPan.y = (viewport.se.y - boundaries.se.y) * newSize
+    }
+
     this.setState({
       pan: newPan,
       zoom: newZoom,
@@ -185,10 +230,21 @@ export default class ParcelPreview extends React.PureComponent {
   }
 
   mouseToCoords(x, y) {
-    const { nw, size, pan } = this.state
-    const half = PADDING / 2
-    const coordX = Math.ceil(half + nw.x + (x - pan.x) / size)
-    const coordY = Math.ceil(half + nw.y + (y - pan.y) / size)
+    const { size, pan, center, width, height } = this.state
+
+    const panOffset = {
+      x: (x + pan.x) / size,
+      y: (y + pan.y) / size
+    }
+
+    const viewportOffset = {
+      x: (width - LOAD_PADDING) / 2 - center.x,
+      y: (height - LOAD_PADDING) / 2 + center.y
+    }
+
+    const coordX = Math.ceil(panOffset.x - viewportOffset.x)
+    const coordY = Math.floor(viewportOffset.y - panOffset.y)
+
     return [coordX, coordY]
   }
 
@@ -228,7 +284,7 @@ export default class ParcelPreview extends React.PureComponent {
     if (!this.canvas) {
       return '🦄'
     }
-    const { width, height, padding, wallet, districts, parcels } = this.props
+    const { width, height, wallet, districts, parcels } = this.props
     let { selected } = this.props
     const { nw, se, pan, size, center } = this.state
     const { x, y } = center
@@ -269,13 +325,12 @@ export default class ParcelPreview extends React.PureComponent {
         ) {
           selection.push({ x: rx, y: ry })
         }
-
         Parcel.draw({
           ctx,
           x: rx + size / 2,
           y: ry + size / 2,
           size,
-          padding,
+          padding: size < 7 ? 0.5 : size < 12 ? 1 : size < 18 ? 1.5 : 2,
           color: backgroundColor,
           connectedLeft: parcel ? parcel.connectedLeft : false,
           connectedTop: parcel ? parcel.connectedTop : false,

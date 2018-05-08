@@ -1,4 +1,11 @@
-import { txUtils } from 'decentraland-commons'
+import { txUtils } from 'decentraland-eth'
+
+// From Publication.js on the server
+export const PUBLICATION_STATUS = Object.freeze({
+  open: 'open',
+  sold: 'sold',
+  cancelled: 'cancelled'
+})
 
 export function toPublicationsObject(publicationsArray) {
   return publicationsArray.reduce(
@@ -36,9 +43,13 @@ export function toPublicationObject(publicationsArray) {
 }
 
 export function isOpen(publication) {
+  return hasStatus(publication, PUBLICATION_STATUS.open)
+}
+
+export function hasStatus(publication, status) {
   return (
     publication &&
-    publication.status === PUBLICATION_STATUS.open &&
+    publication.status === status &&
     publication.tx_status === txUtils.TRANSACTION_STATUS.confirmed &&
     !isExpired(publication)
   )
@@ -47,10 +58,3 @@ export function isOpen(publication) {
 export function isExpired(publication) {
   return parseInt(publication.expires_at, 10) < Date.now()
 }
-
-// From Publication.js on the server
-export const PUBLICATION_STATUS = Object.freeze({
-  open: 'open',
-  sold: 'sold',
-  cancelled: 'cancelled'
-})

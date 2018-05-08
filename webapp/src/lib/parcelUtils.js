@@ -1,4 +1,5 @@
 import { shortenAddress } from 'lib/utils'
+import { isOpen } from 'modules/publication/utils'
 import { t } from 'modules/translation/utils'
 
 export const ROADS_ID = 'f77140f9-c7b4-4787-89c9-9fa0e219b079'
@@ -17,6 +18,8 @@ export const COLORS = Object.freeze({
   loadingEven: '#131523',
   loadingOdd: '#181a29'
 })
+
+export const AUCTION_DATE = new Date('2018-01-31T00:00:00Z')
 
 export function getBounds() {
   return {
@@ -48,8 +51,8 @@ export function getDistrict(parcel, districts = {}) {
   return parcel && districts[parcel.district_id]
 }
 
-export function hasPublication(parcel, publications) {
-  return parcel != null && parcel.publication_tx_hash in publications
+export function isOnSale(parcel) {
+  return parcel != null && isOpen(parcel.publication)
 }
 
 export function getParcelAttributes(id, x, y, wallet, parcels, districts) {
@@ -124,7 +127,7 @@ export function getParcelAttributes(id, x, y, wallet, parcels, districts) {
     }
   }
 
-  if (parcel.publication_tx_hash) {
+  if (isOnSale(parcel)) {
     return {
       label,
       description,
