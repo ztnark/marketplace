@@ -10,7 +10,6 @@ import { publicationSaga } from 'modules/publication/sagas'
 import { transactionSaga } from 'modules/transaction/sagas'
 import { transferSaga } from 'modules/transfer/sagas'
 import { translationSaga } from 'modules/translation/sagas'
-import { uiSaga } from 'modules/ui/sagas'
 import { walletSaga } from 'modules/wallet/sagas'
 
 export function* rootSaga() {
@@ -25,7 +24,6 @@ export function* rootSaga() {
     transactionSaga(),
     transferSaga(),
     translationSaga(),
-    uiSaga(),
     walletSaga()
   ])
 }

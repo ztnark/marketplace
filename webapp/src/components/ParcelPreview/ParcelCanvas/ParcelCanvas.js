@@ -195,6 +195,7 @@ export default class ParcelPreview extends React.PureComponent {
     this.canvas.addEventListener('mousedown', this.handleMouseDown)
     this.canvas.addEventListener('mousemove', this.handleMouseMove)
     this.canvas.addEventListener('mouseout', this.handleMouseOut)
+    this.mounted = true
   }
 
   componentWillUnmount() {
@@ -205,6 +206,7 @@ export default class ParcelPreview extends React.PureComponent {
     this.canvas.removeEventListener('mousedown', this.handleMouseDown)
     this.canvas.removeEventListener('mousemove', this.handleMouseMove)
     this.canvas.removeEventListener('mouseout', this.handleMouseOut)
+    this.mounted = false
   }
 
   handleChange = () => {
@@ -331,15 +333,17 @@ export default class ParcelPreview extends React.PureComponent {
       if (showPopup) {
         this.hidePopup()
         this.popupTimeout = setTimeout(() => {
-          this.setState({
-            popup: {
-              x,
-              y,
-              top: layerY,
-              left: layerX,
-              visible: true
-            }
-          })
+          if (this.mounted) {
+            this.setState({
+              popup: {
+                x,
+                y,
+                top: layerY,
+                left: layerX,
+                visible: true
+              }
+            })
+          }
         }, 400)
       }
     }
