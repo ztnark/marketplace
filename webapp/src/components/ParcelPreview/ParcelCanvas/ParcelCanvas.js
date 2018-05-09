@@ -129,6 +129,25 @@ export default class ParcelPreview extends React.PureComponent {
 
   componentWillUpdate(nextProps, nextState) {
     const { x, y, parcels, useCache } = this.props
+
+    // the coords changed from props (controlled)
+    if (
+      (x !== nextProps.x || y !== nextProps.y) &&
+      (nextProps.x !== nextState.center.x || nextProps.y !== nextState.center.y)
+    ) {
+      nextState = {
+        ...nextState,
+        center: {
+          x: nextProps.x,
+          y: nextProps.y
+        },
+        pan: {
+          x: 0,
+          y: 0
+        }
+      }
+    }
+
     const newState = this.getDimensions(nextProps, nextState)
     const isViewportDifferent =
       newState.width !== this.oldState.width ||
