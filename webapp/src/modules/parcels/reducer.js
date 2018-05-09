@@ -56,7 +56,6 @@ export function parcelsReducer(state = INITIAL_STATE, action) {
     }
     case FETCH_PUBLICATIONS_SUCCESS:
     case FETCH_PARCELS_SUCCESS: {
-      console.time('b')
       const ret = {
         ...state,
         loading: loadingReducer(state.loading, action),
@@ -66,7 +65,6 @@ export function parcelsReducer(state = INITIAL_STATE, action) {
           ...toParcelObject(action.parcels, state.data)
         }
       }
-      console.timeEnd('b')
       return ret
     }
     case FETCH_PARCEL_FAILURE:

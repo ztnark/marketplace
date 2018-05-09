@@ -89,6 +89,7 @@ export default class DashboardPage extends React.PureComponent {
                 <ParcelPreview
                   x={publication.x}
                   y={publication.y}
+                  selected={publication}
                   debounce={index * 100}
                   size={9}
                 />

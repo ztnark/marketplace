@@ -48,7 +48,8 @@ export default class ParcelPreview extends React.PureComponent {
     isDraggable: PropTypes.bool,
     showMinimap: PropTypes.bool,
     showPopup: PropTypes.bool,
-    showControls: PropTypes.bool
+    showControls: PropTypes.bool,
+    useCache: PropTypes.bool
   }
 
   static defaultProps = {
@@ -69,7 +70,8 @@ export default class ParcelPreview extends React.PureComponent {
     isDraggable: false,
     showMinimap: false,
     showPopup: false,
-    showControls: false
+    showControls: false,
+    useCache: true
   }
 
   constructor(props) {
@@ -126,7 +128,7 @@ export default class ParcelPreview extends React.PureComponent {
   }
 
   componentWillUpdate(nextProps, nextState) {
-    const { x, y, parcels } = this.props
+    const { x, y, parcels, useCache } = this.props
     const newState = this.getDimensions(nextProps, nextState)
     const isViewportDifferent =
       newState.width !== this.oldState.width ||
@@ -144,7 +146,7 @@ export default class ParcelPreview extends React.PureComponent {
       isViewportDifferent
     ) {
       const { nw, se } = newState
-      if (!this.inStore(nw, se, nextProps.parcels)) {
+      if (!this.inStore(nw, se, nextProps.parcels) || !useCache) {
         this.debouncedFetchParcels(nw, se)
       }
       this.oldState = newState
@@ -305,7 +307,7 @@ export default class ParcelPreview extends React.PureComponent {
       const parcelId = buildCoordinate(x, y)
       const { onClick, parcels } = this.props
       const parcel = parcels[parcelId]
-      if (onClick && Date.now() - this.mousedownTimestamp < 300) {
+      if (onClick && Date.now() - this.mousedownTimestamp < 200) {
         onClick(x, y, parcel)
       }
     }
