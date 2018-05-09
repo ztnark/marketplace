@@ -8,6 +8,7 @@ import TxStatus from 'components/TxStatus'
 import { t, t_html } from 'modules/translation/utils'
 import { isOnSale } from 'lib/parcelUtils'
 import { buildCoordinate } from 'lib/utils'
+import { publicationType } from 'components/types'
 import { locations } from 'locations'
 
 import TransferParcelForm from './TransferParcelForm'
@@ -18,6 +19,7 @@ export default class TransferParcelPage extends React.PureComponent {
   static propTypes = {
     x: PropTypes.number.isRequired,
     y: PropTypes.number.isRequired,
+    publications: PropTypes.objectOf(publicationType),
     isTxIdle: PropTypes.bool.isRequired,
     transferError: PropTypes.string,
     onSubmit: PropTypes.func.isRequired,
@@ -26,14 +28,14 @@ export default class TransferParcelPage extends React.PureComponent {
   }
 
   render() {
-    const { x, y, isTxIdle, transferError } = this.props
+    const { x, y, isTxIdle, transferError, publications } = this.props
     const { onSubmit, onCancel, onCleanTransfer } = this.props
 
     return (
       <Parcel x={x} y={y} ownerOnly>
         {parcel => (
           <div className="TransferParcelPage">
-            {isOnSale(parcel) ? (
+            {isOnSale(parcel, publications) ? (
               <Container text>
                 <Message
                   warning
@@ -57,6 +59,7 @@ export default class TransferParcelPage extends React.PureComponent {
             >
               <TransferParcelForm
                 parcel={parcel}
+                publications={publications}
                 isTxIdle={isTxIdle}
                 transferError={transferError}
                 onSubmit={onSubmit}

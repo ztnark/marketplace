@@ -2,6 +2,7 @@ import { withRouter } from 'react-router'
 import { connect } from 'react-redux'
 import { push } from 'react-router-redux'
 
+import { getPublications } from 'modules/publication/selectors'
 import { isTxIdle, getError } from 'modules/transfer/selectors'
 import { getParams } from 'modules/location/selectors'
 import { transferParcelRequest, cleanTransfer } from 'modules/transfer/actions'
@@ -17,7 +18,8 @@ const mapState = (state, ownProps) => {
     x,
     y,
     isTxIdle: isTxIdle(state),
-    transferError: getError(state)
+    transferError: getError(state),
+    publications: getPublications(state)
   }
 }
 

@@ -51,11 +51,32 @@ export function getDistrict(parcel, districts = {}) {
   return parcel && districts[parcel.district_id]
 }
 
-export function isOnSale(parcel) {
-  return parcel != null && isOpen(parcel.publication)
+export function getPublication(parcel, publications) {
+  if (!parcel) {
+    return null
+  }
+  const publication = publications[parcel.publication_tx_hash]
+  if (!publication) {
+    return null
+  }
+
+  return publication
 }
 
-export function getParcelAttributes(id, x, y, wallet, parcels, districts) {
+export function isOnSale(parcel, publications) {
+  const publication = getPublication(parcel, publications)
+  return isOpen(publication)
+}
+
+export function getParcelAttributes(
+  id,
+  x,
+  y,
+  wallet,
+  parcels,
+  districts,
+  publications
+) {
   const parcel = parcels[id]
   if (!parcel) {
     return {
@@ -127,7 +148,7 @@ export function getParcelAttributes(id, x, y, wallet, parcels, districts) {
     }
   }
 
-  if (isOnSale(parcel)) {
+  if (isOnSale(parcel, publications)) {
     return {
       label,
       description,

@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom'
 import { Button, Icon } from 'semantic-ui-react'
 import { parcelType } from 'components/types'
 import { t } from 'modules/translation/utils'
-import { isOnSale } from 'lib/parcelUtils'
 import { locations } from 'locations'
 
 import './ParcelActions.css'
@@ -13,7 +12,8 @@ export default class ParcelActions extends React.PureComponent {
   static propTypes = {
     parcel: parcelType.isRequired,
     onTransfer: PropTypes.func.isRequired,
-    isOwner: PropTypes.bool
+    isOwner: PropTypes.bool,
+    isOnSale: PropTypes.bool
   }
 
   handleTransfer = () => {
@@ -27,8 +27,8 @@ export default class ParcelActions extends React.PureComponent {
   }
 
   handleSell = () => {
-    const { parcel, onSell, onCancelSale } = this.props
-    if (isOnSale(parcel)) {
+    const { parcel, onSell, onCancelSale, isOnSale } = this.props
+    if (isOnSale) {
       onCancelSale(parcel)
     } else {
       onSell(parcel)
@@ -36,7 +36,7 @@ export default class ParcelActions extends React.PureComponent {
   }
 
   render() {
-    const { parcel, isOwner } = this.props
+    const { parcel, isOnSale, isOwner } = this.props
     if (!parcel) {
       return null
     }
@@ -57,7 +57,7 @@ export default class ParcelActions extends React.PureComponent {
                 {t('parcel_detail.actions.transfer')}
               </Button>
             </Link>
-            {isOnSale(parcel) ? (
+            {isOnSale ? (
               <Link to={locations.cancelSaleLand(x, y)}>
                 <Button size="tiny">
                   <Icon name="cancel" />
@@ -73,7 +73,7 @@ export default class ParcelActions extends React.PureComponent {
               </Link>
             )}
           </React.Fragment>
-        ) : isOnSale(parcel) ? (
+        ) : isOnSale ? (
           <Link to={locations.buyLand(x, y)}>
             <Button primary size="large">
               {t('parcel_detail.publication.buy')}

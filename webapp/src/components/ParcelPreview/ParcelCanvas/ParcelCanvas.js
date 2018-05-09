@@ -157,10 +157,9 @@ export default class ParcelPreview extends React.PureComponent {
     // The dimensions of the canvas or the parcels data changed, so we need to repaint
     if (nextProps.parcels !== parcels) {
       this.clearCache()
-      this.shouldRefreshMap = true
-    } else if (isViewportDifferent) {
-      this.shouldRefreshMap = true
     }
+
+    this.shouldRefreshMap = true
   }
 
   inStore(nw, se, parcels) {
@@ -415,7 +414,15 @@ export default class ParcelPreview extends React.PureComponent {
           connectedLeft: parcel ? parcel.connectedLeft : false,
           connectedTop: parcel ? parcel.connectedTop : false,
           connectedTopLeft: parcel ? parcel.connectedTopLeft : false,
-          ...getParcelAttributes(parcelId, x, y, wallet, parcels, districts)
+          ...getParcelAttributes(
+            parcelId,
+            x,
+            y,
+            wallet,
+            parcels,
+            districts,
+            publications
+          )
         })
   }
 
