@@ -31,6 +31,7 @@
     "history": "^4.7.2",
     "impetus": "^0.8.7",
     "lodash.debounce": "^4.0.8",
+    "mouse-wheel": "^1.2.0",
     "prettier": "^1.10.2",
     "prop-types": "^15.5.10",
     "query-string": "^5.1.0",
