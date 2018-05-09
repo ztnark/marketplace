@@ -225,6 +225,7 @@ export default class ParcelPreview extends React.PureComponent {
   handlePanZoom = ({ dx, dy, dz }) => {
     const { size, maxSize, minSize } = this.props
     const { pan, zoom } = this.state
+
     const maxZoom = maxSize / size
     const minZoom = minSize / size
 
@@ -232,7 +233,10 @@ export default class ParcelPreview extends React.PureComponent {
       x: pan.x - dx,
       y: pan.y - dy
     }
-    const newZoom = Math.max(minZoom, Math.min(maxZoom, zoom - dz * 0.01))
+    const newZoom = Math.max(
+      minZoom,
+      Math.min(maxZoom, zoom - dz * (this.isMobile() ? 0.005 : 0.01))
+    )
     const newSize = newZoom * size
 
     const halfWidth = (this.state.width - LOAD_PADDING) / 2
@@ -364,6 +368,11 @@ export default class ParcelPreview extends React.PureComponent {
         popup: { ...this.state.popup, visible: false }
       })
     }
+  }
+
+  isMobile() {
+    const { width } = this.props
+    return width <= 768
   }
 
   updateCenter = () => {
@@ -550,7 +559,7 @@ export default class ParcelPreview extends React.PureComponent {
     this.handlePanZoom({
       dx: 0,
       dy: 0,
-      dz: -zoom * 50
+      dz: -zoom * (this.isMobile ? 100 : 50)
     })
   }
 
@@ -559,7 +568,7 @@ export default class ParcelPreview extends React.PureComponent {
     this.handlePanZoom({
       dx: 0,
       dy: 0,
-      dz: Math.sqrt(zoom) * 50
+      dz: Math.sqrt(zoom) * (this.isMobile ? 100 : 50)
     })
   }
 
@@ -584,7 +593,6 @@ export default class ParcelPreview extends React.PureComponent {
     if (onClick) {
       classes += ' clickable'
     }
-    const isMobile = width <= 768
 
     return (
       <div className="ParcelCanvasWrapper" style={styles}>
@@ -594,8 +602,8 @@ export default class ParcelPreview extends React.PureComponent {
           height={height}
           ref={this.refCanvas}
         />
-        {isMobile || !showPopup ? null : this.renderPopup()}
-        {isMobile || !showMinimap ? null : (
+        {this.isMobile() || !showPopup ? null : this.renderPopup()}
+        {this.isMobile() || !showMinimap ? null : (
           <Minimap
             width={this.state.width - LOAD_PADDING}
             height={this.state.height - LOAD_PADDING}
