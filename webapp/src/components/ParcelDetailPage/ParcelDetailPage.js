@@ -1,6 +1,5 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Link } from 'react-router-dom'
 import { Container } from 'semantic-ui-react'
 import ParcelPreview from 'components/ParcelPreview'
 import ParcelDetail from './ParcelDetail'
@@ -21,7 +20,8 @@ export default class ParcelDetailPage extends React.PureComponent {
     publications: PropTypes.objectOf(publicationType),
     onFetchParcelPublications: PropTypes.func.isRequired,
     onError: PropTypes.func.isRequired,
-    onBuy: PropTypes.func.isRequired
+    onBuy: PropTypes.func.isRequired,
+    onParcelClick: PropTypes.func.isRequired
   }
 
   componentWillMount() {
@@ -48,7 +48,15 @@ export default class ParcelDetailPage extends React.PureComponent {
   }
 
   render() {
-    const { x, y, error, districts, publications, onBuy } = this.props
+    const {
+      x,
+      y,
+      error,
+      districts,
+      publications,
+      onBuy,
+      onParcelClick
+    } = this.props
 
     if (error) {
       return null
@@ -62,8 +70,11 @@ export default class ParcelDetailPage extends React.PureComponent {
                 x={parcel.x}
                 y={parcel.y}
                 selected={parcel}
-                size={14}
-                padding={2}
+                isDraggable
+                showMinimap
+                showPopup
+                showControls
+                onClick={onParcelClick}
               />
             </div>
             <Container>
