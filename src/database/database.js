@@ -4,7 +4,8 @@ export const database = {
   ...db.postgres,
 
   async connect() {
-    const CONNECTION_STRING = env.get('CONNECTION_STRING')
+    console.log(env.get('CONNECTION_STRING'))
+    const CONNECTION_STRING = "postgres://jjkrantz:qwerty@localhost:5432/marketplace"
     this.client = await db.postgres.connect(CONNECTION_STRING)
     return this
   }

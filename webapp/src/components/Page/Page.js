@@ -40,9 +40,9 @@ export default class Page extends React.PureComponent {
   }
 
   checkPopTerms() {
-    const { onFirstVisit, isStatic } = this.props
+    const { onFirstVisit } = this.props
 
-    const shouldTriggerTermsModal = !isStatic && !this.hasAcceptedTerms
+    const shouldTriggerTermsModal = false
 
     if (shouldTriggerTermsModal) {
       onFirstVisit()

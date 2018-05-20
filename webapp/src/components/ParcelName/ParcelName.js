@@ -39,7 +39,7 @@ export default class ParcelName extends React.PureComponent {
       if (districts && parcel.district_id in districts) {
         name = districts[parcel.district_id].name
       }
-      if (parcel.data.name) {
+      if (parcel.data) {
         name = parcel.data.name
       }
     }

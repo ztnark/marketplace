@@ -30,7 +30,7 @@ export default class ParcelDetail extends React.PureComponent {
     if (district) {
       return district.description
     }
-    if (parcel.data.description) {
+    if (parcel.data) {
       return parcel.data.description
     }
 

@@ -27,7 +27,7 @@ const httpServer = http.Server(app)
 app.use(bodyParser.urlencoded({ extended: false, limit: '2mb' }))
 app.use(bodyParser.json())
 
-if (env.isDevelopment()) {
+if (true) {
   app.use(function(req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', '*')
     res.setHeader('Access-Control-Request-Method', '*')

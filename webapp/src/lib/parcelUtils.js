@@ -101,7 +101,7 @@ export function getParcelAttributes(id, x, y, wallet, parcels, districts) {
     }
   }
 
-  const label = parcel.data.name || null
+  const label = null
   let description = t('atlas.no_owner')
   if (parcel.owner) {
     description =
