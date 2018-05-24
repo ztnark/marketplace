@@ -83,7 +83,7 @@ export default class ParcelDetail extends React.PureComponent {
               <ParcelDescription description={description} />
             </Grid.Column>
             <Grid.Column className="parcel-owner-container">
-              <div style={{ fontSize: '1.5em' }}>🤖 Estimate: ${this.state.estimate.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</div>
+              <div style={{ fontSize: '1.5em' }}>🤖 Estimate: {this.state.estimate.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} MANA</div>
             </Grid.Column>
           </Grid.Row>
           {publication || isOwner ? (
