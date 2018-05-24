@@ -33,9 +33,13 @@ import Toast from 'components/Toast'
 
 export default class Routes extends React.Component {
   renderRoutes() {
+    debugger
+    if (window.location.pathname === "/") {
+      window.location = "/0/0"
+    }
     return (
       <Switch>
-        <Route exact path={locations.root} component={HomePage} />
+        <Route exact path={locations.root} component={AtlasPage} />
         <Route exact path={locations.parcel} component={ParcelDetailPage} />
         <Route exact path={locations.marketplace} component={MarketplacePage} />
         <Route exact path={locations.profile} component={ProfilePage} />

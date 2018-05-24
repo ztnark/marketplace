@@ -2,6 +2,7 @@ import React from 'react'
 import { Header, Grid } from 'semantic-ui-react'
 import PropTypes from 'prop-types'
 import { utils } from 'decentraland-commons'
+import request from 'request'
 
 import ParcelName from 'components/ParcelName'
 import Mana from 'components/Mana'
@@ -16,11 +17,25 @@ import { getDistrict, isOnSale } from 'lib/parcelUtils'
 import { t } from 'modules/translation/utils'
 
 export default class ParcelDetail extends React.PureComponent {
+  state = {
+    estimate: 0
+  }
+
   static propTypes = {
     parcel: parcelType.isRequired,
     publications: PropTypes.objectOf(publicationType),
     districts: PropTypes.objectOf(districtType).isRequired,
     onBuy: PropTypes.func.isRequired
+  }
+
+  componentWillMount() {
+    this.fetchEstimate()
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.parcel.x !== this.props.parcel.x || nextProps.parcel.y !== this.props.parcel.y) {
+      this.fetchEstimate()
+    }
   }
 
   getDescription() {
@@ -42,6 +57,14 @@ export default class ParcelDetail extends React.PureComponent {
     return isOnSale(parcel) ? parcel.publication : null
   }
 
+  fetchEstimate() {
+    request('https://us-central1-coin-alerts.cloudfunctions.net/function-1?x=' + this.props.parcel.x + '&y=' + this.props.parcel.y, { json: true }, (err, res, body) => {
+      if (err) { return console.log(err); }
+      console.log(body.values[0][8]);
+      this.setState({ estimate: body.values[0][8] })
+    })
+  }
+
   render() {
     const { parcel, districts, publications, isOwner } = this.props
 
@@ -55,6 +78,7 @@ export default class ParcelDetail extends React.PureComponent {
             <Grid.Column>
               <Header size="large">
                 <ParcelName parcel={parcel} />
+                <div>Destimate: ${this.state.estimate.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</div>
               </Header>
               <ParcelDescription description={description} />
             </Grid.Column>

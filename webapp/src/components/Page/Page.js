@@ -19,8 +19,8 @@ export default class Page extends React.PureComponent {
   static defaultProps = {
     children: null,
     isStatic: false,
-    onFetchDistricts: () => {},
-    onFirstVisit: () => {}
+    onFetchDistricts: () => { },
+    onFirstVisit: () => { }
   }
 
   get hasAcceptedTerms() {
@@ -57,7 +57,7 @@ export default class Page extends React.PureComponent {
         <Navbar />
         <div className="Page">
           {children}
-          <Footer />
+          {/* <Footer /> */}
         </div>
       </TranslationProvider>
     )

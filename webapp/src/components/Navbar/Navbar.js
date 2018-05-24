@@ -43,11 +43,7 @@ export default class Navbar extends React.PureComponent {
   getNavigationPaths() {
     const { wallet, center } = this.props
     return {
-      [NAVBAR_PAGES.atlas]: locations.parcelMapDetail(center.x, center.y),
-      [NAVBAR_PAGES.marketplace]: locations.marketplace,
-      [NAVBAR_PAGES.profile]: locations.profilePage(wallet.address),
-      [NAVBAR_PAGES.activity]: locations.activity,
-      [NAVBAR_PAGES.signIn]: locations.signIn
+      [NAVBAR_PAGES.atlas]: locations.parcelMapDetail(center.x, center.y)
     }
   }
 
@@ -125,26 +121,6 @@ export default class Navbar extends React.PureComponent {
           <Icon name="close" />
         </Responsive>
         {this.renderMenuItem('atlas')}
-        {this.renderMenuItem('marketplace')}
-        {isConnected ? (
-          <React.Fragment>
-            {this.renderMenuItem('profile')}
-            <Responsive
-              as={Menu.Item}
-              maxWidth={Responsive.onlyTablet.minWidth}
-              href={navigationPaths[NAVBAR_PAGES.activity]}
-              active={activePage === NAVBAR_PAGES.activity}
-              onClick={this.handleItemClick}
-            >
-              {t('global.activity')}
-              {activityBadge > 0 ? (
-                <Label size="large" className="activity-badge-mobile">
-                  {activityBadge}
-                </Label>
-              ) : null}
-            </Responsive>
-          </React.Fragment>
-        ) : null}
       </React.Fragment>
     )
   }
@@ -214,42 +190,6 @@ export default class Navbar extends React.PureComponent {
               {this.renderMenuItems()}
             </Sidebar>
           </Responsive>
-        </div>
-        <div className="navbar-account">
-          {isConnected ? (
-            <React.Fragment>
-              <Responsive
-                as={Menu}
-                secondary
-                className="activity-menu"
-                minWidth={Responsive.onlyTablet.minWidth}
-              >
-                <Menu.Item
-                  href={navigationPaths[NAVBAR_PAGES.activity]}
-                  active={activePage === NAVBAR_PAGES.activity}
-                  onClick={this.handleItemClick}
-                >
-                  <Icon name="bell" />
-                  {this.renderActivityBadge()}
-                </Menu.Item>
-              </Responsive>
-              <Account wallet={wallet} />
-            </React.Fragment>
-          ) : isConnecting ? (
-            <Menu secondary>
-              <Menu.Item>{t('global.connecting')}&hellip;</Menu.Item>
-            </Menu>
-          ) : (
-            <Menu secondary>
-              <Menu.Item
-                href={navigationPaths[NAVBAR_PAGES.signIn]}
-                active={activePage === NAVBAR_PAGES.signIn}
-                onClick={this.handleItemClick}
-              >
-                {t('global.sign_in')}
-              </Menu.Item>
-            </Menu>
-          )}
         </div>
       </div>
     )
