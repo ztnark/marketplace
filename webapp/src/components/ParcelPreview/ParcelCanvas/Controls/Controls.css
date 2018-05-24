@@ -21,7 +21,7 @@
 
 .MapControls .control-button {
   border-radius: var(--border-radius);
-  background-color: var(--background);
+  background-color: #333;
   border: 2px solid black;
   color: white;
   width: 35px;

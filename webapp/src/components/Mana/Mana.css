@@ -1,5 +1,5 @@
 .Mana {
-  color: var(--light-blue);
+  color: var(--text);
   display: inline-flex;
   flex-flow: row nowrap;
   align-items: center;

@@ -96,14 +96,12 @@ export default class Navbar extends React.PureComponent {
     const { isLoading } = this.props
     return (
       <div className="navbar-header">
-        <Link to={locations.root} className="navbar-logo">
+        <span style={{ color: 'var(--text);', fontSize: '2.5em' }}>🤖 DCL.properties</span>
+        {/* <Link to={locations.root} className="navbar-logo">
           <span className="navbar-icon">
-            <DecentralandIcon
-              name={isLoading ? 'decentraland-loading' : 'decentraland'}
-              className="pull-left"
-            />
+            
           </span>
-        </Link>
+        </Link> */}
       </div>
     )
   }
@@ -120,7 +118,7 @@ export default class Navbar extends React.PureComponent {
         >
           <Icon name="close" />
         </Responsive>
-        {this.renderMenuItem('atlas')}
+        {/* {this.renderMenuItem('atlas')} */}
       </React.Fragment>
     )
   }
