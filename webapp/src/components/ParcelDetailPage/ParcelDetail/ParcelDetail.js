@@ -34,7 +34,7 @@ export default class ParcelDetail extends React.PureComponent {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.parcel.x !== this.props.parcel.x || nextProps.parcel.y !== this.props.parcel.y) {
-      this.fetchEstimate()
+      this.fetchEstimate(nextProps)
     }
   }
 
@@ -57,8 +57,8 @@ export default class ParcelDetail extends React.PureComponent {
     return isOnSale(parcel) ? parcel.publication : null
   }
 
-  fetchEstimate() {
-    request('https://us-central1-coin-alerts.cloudfunctions.net/function-1?x=' + this.props.parcel.x + '&y=' + this.props.parcel.y, { json: true }, (err, res, body) => {
+  fetchEstimate(props) {
+    request('https://us-central1-coin-alerts.cloudfunctions.net/function-1?x=' + props.parcel.x + '&y=' + props.parcel.y, { json: true }, (err, res, body) => {
       if (err) { return console.log(err); }
       console.log(body.values[0][8]);
       this.setState({ estimate: body.values[0][8] })
