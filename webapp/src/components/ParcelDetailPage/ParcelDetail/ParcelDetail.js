@@ -29,7 +29,7 @@ export default class ParcelDetail extends React.PureComponent {
   }
 
   componentWillMount() {
-    this.fetchEstimate()
+    this.fetchEstimate(this.props)
   }
 
   componentWillReceiveProps(nextProps) {
